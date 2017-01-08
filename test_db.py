@@ -3,6 +3,7 @@ from test_tiny import TinyTest
 from test_essential import EssentialTest
 from test_pydblite import PyDBLiteTest
 import shelve
+from test_config import config
 
 TINY_DB = "dbfiles/tiny"
 ESSENTIAL_DB = 'dbfiles/essential'
@@ -22,7 +23,7 @@ class Timer():
         self.secs = self.end - self.start
         # self.msecs = self.secs * 1000  # millisecs
         if self.verbose:
-            print('elapsed time: %f ms' % self.msecs)
+            print('elapsed time: %f seconds' % self.secs)
 
 
 def import_data(file_name):
@@ -82,23 +83,15 @@ def run_tests(klass, iterations, record_counts, nocache_list, db_path, targets, 
 
 if __name__ == "__main__":
 
-    target_values = {
-        "get_one": "a-very-unique-slug",
-        "get_nested": "targetuser@example.com",
-        "update_one": "another-very-unique-slug",
-        "delete_one": "third-very-unique-slug",
-    }
-
-    record_counts = range(10000, 110000, 10000)
-    #record_counts = [1000, 2000, 3000]
-
+    record_counts = config['record_counts']
+    target_values = config['target_values']
     basic_functions = ["get_one", "get_many", "get_complex_and", "get_complex_or", "get_nested"]
 
     all_functions = ["get_one", "get_many", "get_complex_and", "get_complex_or", "get_nested", "update_one",
                      "update_many", "delete_one", "delete_many"]
 
-    run_tests(EssentialTest, 1, record_counts, all_functions, ESSENTIAL_DB, target_values, "essential.results.csv")
-    run_tests(PyDBLiteTest, 1, record_counts, all_functions, PYDBLITE_DB, target_values, 'pydb.results.csv')
-    run_tests(TinyTest, 1, record_counts, all_functions, TINY_DB, target_values, "tiny.results.csv")
+    run_tests(EssentialTest, config['iterations'], record_counts, all_functions, ESSENTIAL_DB, target_values, "essential.results.csv")
+    run_tests(PyDBLiteTest, config['iterations'], record_counts, all_functions, PYDBLITE_DB, target_values, 'pydb.results.csv')
+    run_tests(TinyTest, config['iterations'], record_counts, all_functions, TINY_DB, target_values, "tiny.results.csv")
 
 

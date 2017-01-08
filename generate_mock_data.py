@@ -1,11 +1,12 @@
 
 from document_generator import DocumentGenerator
+from test_config import config
 import random
 import shelve
 
 if __name__ == "__main__":
 
-    output_dir = "mock-data"
+    output_dir = config['mock_directory']
     output_name_prefix = "todoshelf"
     record_counts = range(10000, 110000, 10000)
     generator = DocumentGenerator()
@@ -49,7 +50,7 @@ if __name__ == "__main__":
 
         if count == record_counts[0]:
             # just do this once
-            users.append("targetuser@example.com")
+            users.append(config['target_values']['get_nested'])
             random.shuffle(users)
 
         template = {
@@ -69,9 +70,9 @@ if __name__ == "__main__":
         documents = generator.gen_docs(count)
 
         # set target values
-        random.choice(documents)['slug'] = "a-very-unique-slug"
-        random.choice(documents)['slug'] = "another-very-unique-slug"
-        random.choice(documents)['slug'] = "third-very-unique-slug"
+        random.choice(documents)['slug'] = config['target_values']['get_one'] # "a-very-unique-slug"
+        random.choice(documents)['slug'] = config['target_values']['update_one'] #"another-very-unique-slug"
+        random.choice(documents)['slug'] = config['target_values']['delete_one'] #"third-very-unique-slug"
 
         file_name = "%s/%s.%i" % (output_dir, output_name_prefix, count)
 
